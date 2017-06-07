@@ -1,0 +1,118 @@
+<div class="admin-content">
+    <div class="admin-content-body">
+        <div class="am-cf am-padding">
+            <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">媒体管理</strong> /
+                <small> 媒体库</small>
+            </div>
+        </div>
+
+        <div class="am-panel am-panel-default">
+            <div class="am-panel-bd">
+                <div class="am-fl">
+
+                </div>
+                <div class="am-fr">
+                    <button type="button" class="am-btn am-btn-secondary"
+                            data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 600}">上传视频
+                    </button>
+                </div>
+            </div>
+            <table class="am-table am-table-bd am-table-striped admin-content-table">
+                <thead>
+                <tr>
+                    <th>视频名称</th>
+                    <th>创建时间</th>
+                    <th>执行状态</th>
+                    <th>媒体状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <div class="am-panel-footer">
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="admin-content-footer">
+        <hr>
+        <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+</div>
+
+
+<div class="am-modal am-modal-no-btn " tabindex="-1" id="doc-modal-1">
+    <div class="am-modal-dialog  am-padding-bottom ">
+        <div class="am-modal-hd">
+            <h3 class="am-fl">上传任务</h3>
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd am-margin-top-xl ">
+            <div class="am-panel am-panel-default">
+                <div class="am-panel-bd">
+
+                </div>
+                <table class="am-table am-table-bordered am-table-radius am-table-striped">
+                    <thead>
+                    <th>
+                        文件名
+                    </th>
+                    <th>
+                        状态
+                    </th>
+                    <th>
+                        进度
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                    </thead>
+                    <tbody id="video-list">
+
+                    </tbody>
+                </table>
+                <div class="am-panel-footer ">
+                    <div class="am-fr am-margin-top-xl">
+                        <button id="upload-video" type="button" class="am-btn am-btn-default">上传视频</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/plupload-2.3.1/js/plupload.full.min.js"></script>
+<script>
+    $(function () {
+        var pluploader = new plupload.Uploader({
+            browse_button: 'upload-video',
+            url: '/vod/upload_video',
+            file_data_name:'videofile',
+            multipart:true,
+            unique_names:true,
+            runtimes:'html5'
+        });
+        pluploader.init();
+        pluploader.bind('FilesAdded', function(up, files) {
+            var html = '';
+            plupload.each(files, function(file) {
+                html += '<tr id="'+ file.id +'"><td>' + file.name + '</td><td>w</td><td ><div class="am-progress am-progress-xs"> <div id="UploadProgress" class="am-progress-bar" ></div></div></td><td>取消上传</td></tr>';
+            });
+            document.getElementById('video-list').innerHTML += html;
+            pluploader.start();
+        });
+        pluploader.bind('UploadProgress', function(up, file) {
+            console.log(file.percent)
+           $('#UploadProgress').width(file.percent+"%")
+        });
+        pluploader.bind('Error', function(up, err) {
+            document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+        });
+        pluploader.bind('FileUploaded',function (uploader,file,responseObject) {
+            console.log(responseObject)
+        });
+    });
+</script>

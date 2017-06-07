@@ -10,3 +10,5 @@ node_modules/*
 idea/*
 public/video/
 public/video/*
+public/upload/
+public/upload/*

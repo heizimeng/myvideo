@@ -5,10 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs  = require('express-handlebars');
+
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 var manage = require('./routes/manage');
-
+var vod = require('./routes/vod');
 
 
 
@@ -29,8 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/manage', manage);
-
-
+app.use('/vod', vod);
 
 
 
