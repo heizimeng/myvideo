@@ -135,4 +135,20 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+
+//GET LOGIN
+router.get('/login',function (req, res, next) {
+    res.render('login')
+})
+
+router.post('/tologin',function (req,res,next) {
+    if (req.body.mail == 'hz@25ic.com' && req.body.password == '123456'){
+        res.redirect('/manage');
+    }else{
+        res.redirect('/login')
+    }
+})
+
+
+
 module.exports = router;
