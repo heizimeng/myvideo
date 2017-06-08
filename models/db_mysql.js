@@ -62,19 +62,24 @@ DB.getAll = function (table,fileds,wheres,callback) {
 
     })
 };
-DB.delete = function (table,where) {
-	var sql = 'delete from ' + table + where;
-	DB.execs(sql,function (err,rows) {
-		callback(rows)
-    })
-}
+DB.delete = function (table,where,callback) {
+	var db = table;
+	if (typeof where === 'object'){
+		 DB.fetch(where,function (fwhere) {
+             var sql = 'delete from ' + table + fwhere;
+             DB.execs(sql,function (err,rows) {
+                 callback(rows)
+             })
+         })
+	}
+};
 
 DB.update = function () {
 	var sql = '';
 	DB.execs(sql,function (err,rows) {
 		callback(rows)
-    })
-}
+    });
+};
 
 DB.insert = function () {
 	var sql = '';
@@ -89,8 +94,13 @@ DB.execs = function (sql,callback) {
     })
 };
 
-DB.fetch = function () {
-	
+DB.fetch = function (where,callback) {
+	var swhere = ' where ';
+    for(var i in where){
+        swhere +=  i + ' = "' + where[i] + '" AND ';
+	}
+    swhere += ' 1 ';
+	callback(swhere)
 }
 
 

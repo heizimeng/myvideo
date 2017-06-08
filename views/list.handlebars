@@ -40,7 +40,7 @@
                               <button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle><span class="am-icon-cog"></span> <span class="am-icon-caret-down"></span></button>
                               <ul class="am-dropdown-content">
                                   <li><a href="javascript: void(0)" id="transcoding" data-id="{{ id }}">转码</a></li>
-                                <li><a href="#">删除</a></li>
+                                <li><a href="javascript: void(0)"id="delete" data-id="{{ id }}">删除</a></li>
                               </ul>
                             </div>
                         </td>
@@ -156,6 +156,17 @@
 
             }
         })
-    })
+    });
+    $(document).on('click','#delete',function (e) {
+        var id = $(this).attr('data-id')
+        $.ajax({
+            url:'/vod/delete',
+            type:'post',
+            data:{id:id},
+            dataType: 'json',
+            success:function (res) {
 
+            }
+        })
+    });
 </script>
