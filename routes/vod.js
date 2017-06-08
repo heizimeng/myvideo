@@ -3,15 +3,9 @@ var formidable = require('formidable');
 var fs = require('fs');
 var uuid = require('node-uuid');
 var mysql = require('mysql');
+var ffmpeg = require('../libraries/my_ffmpeg');
 var db = require('../config');
-
-
-// var redis = require("redis"),client = redis.createClient();
-// client.on("error", function (err) {
-//     console.log("Error " + err);
-// });
-//client.set("string key", "string val", redis.print);
-
+var db_mysql = require('../models/db_mysql');
 var conn = mysql.createConnection({
         host: db.mysql.db_host,
         user: db.mysql.username,
@@ -19,20 +13,16 @@ var conn = mysql.createConnection({
         database:db.mysql.db_name,
         port: db.mysql.db_port
     });
-conn.connect();
+//conn.connect();
 var router = express.Router();
 /* GET users listing. */
 var info = '';
 router.get('/list', function(req, res, next) {
-    conn.query("select * from video;" ,function (err,rows) {
-        if (err) throw err;
-        info = rows
-    })
-
-    res.render('list',{
-        data:info
-    });
-
+       db_mysql.getAll('video',[],{},function (rows) {
+            res.render('list',{
+                data:rows
+            });
+       });
 });
 
 router.post('/upload_video',function (req,res,next) {
@@ -77,7 +67,6 @@ router.post('/upload_video',function (req,res,next) {
         }
     });
     form.on('end', function() {
-
         conn.query('insert into video (name,media_id,createtime)values(?,?,?)',[filename,medis_id,timestamp], function(err, result) {
             if (err) throw err;
             var json = JSON.stringify({
@@ -90,4 +79,86 @@ router.post('/upload_video',function (req,res,next) {
         conn.end();
     });
 });
+//转码
+router.post('/transcoding',function (req,res) {
+    var id = req.body.id;
+    db_mysql.getOne('video',[],{id:id},function (rows) {
+        ffmpeg.getVideoInfo(rows.name,function (err,info) {
+            console.log(info);
+        })
+        var dstPath = './public/video/';
+        ffmpeg.command(rows.name)
+            .audioCodec('aac')
+            .audioBitrate('128k')
+            .videoCodec('libx264')
+            .format('hls')
+            .outputOptions([
+                '-map 0',
+                '-preset medium',
+                '-profile:v baseline',
+                '-use_localtime_mkdir 1',
+                '-level 3.0',
+                '-use_localtime 1',
+                '-pix_fmt yuv420p',
+                '-hls_segment_filename ' + dstPath +'%Y%m%d/file-%Y%m%d-%s.ts',
+                '-hls_list_size 0',
+                '-start_number 1'
+            ])
+           .output(dstPath + rows.media_id +'.m3u8')
+            .on('start',function(cmd) {
+                console.log('Command Line: '+ cmd);
+            })
+            .on('error',function (err) {
+                console.log('FFMPEG ERROR ' + err);
+            })
+            .on('progress',function (progress) {
+                console.log(progress);
+            })
+            .on('stderr', function(stderrLine) {
+                console.log('Stderr output:' + stderrLine);
+            })
+            .run();
+    })
+});
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
