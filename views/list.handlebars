@@ -28,7 +28,30 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                {{#if data}}
+                {{#each data}}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <div class="am-dropdown" data-am-dropdown>
+                              <button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle><span class="am-icon-cog"></span> <span class="am-icon-caret-down"></span></button>
+                              <ul class="am-dropdown-content">
+                                <li><a href="#">1. 编辑</a></li>
+                                <li><a href="#">2. 下载</a></li>
+                                <li><a href="#">3. 删除</a></li>
+                              </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+                {{ else }}
+                    <tr>
+                        <td align="center" colspan="5">暂无</td>
+                    </tr>
+                {{/if}}
                 </tbody>
             </table>
             <div class="am-panel-footer">

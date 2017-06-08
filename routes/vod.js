@@ -3,6 +3,9 @@ var formidable = require('formidable');
 var fs = require('fs');
 var uuid = require('node-uuid');
 var mysql = require('mysql');
+var db = require('../config');
+
+
 // var redis = require("redis"),client = redis.createClient();
 // client.on("error", function (err) {
 //     console.log("Error " + err);
@@ -10,17 +13,26 @@ var mysql = require('mysql');
 //client.set("string key", "string val", redis.print);
 
 var conn = mysql.createConnection({
-        host: '122.114.180.147',
-        user: 'root',
-        password: '123456',
-        database:'myvideo',
-        port: 3306
+        host: db.mysql.db_host,
+        user: db.mysql.username,
+        password: db.mysql.password,
+        database:db.mysql.db_name,
+        port: db.mysql.db_port
     });
 conn.connect();
 var router = express.Router();
 /* GET users listing. */
+var info = '';
 router.get('/list', function(req, res, next) {
-   res.render('list')
+    conn.query("select * from video;" ,function (err,rows) {
+        if (err) throw err;
+        info = rows
+    })
+
+    res.render('list',{
+        data:info
+    });
+
 });
 
 router.post('/upload_video',function (req,res,next) {
@@ -65,6 +77,7 @@ router.post('/upload_video',function (req,res,next) {
         }
     });
     form.on('end', function() {
+
         conn.query('insert into video (name,media_id,createtime)values(?,?,?)',[filename,medis_id,timestamp], function(err, result) {
             if (err) throw err;
             var json = JSON.stringify({
