@@ -6,6 +6,9 @@ var mysql = require('mysql');
 var ffmpeg = require('../libraries/my_ffmpeg');
 var config = require('../config');
 var db_mysql = require('../models/db_mysql');
+var io = require('socket.io')(8000)
+
+
 var conn = mysql.createConnection({
         host: config.mysql.db_host,
         user: config.mysql.username,
@@ -72,10 +75,8 @@ router.post('/upload_video',function (req,res,next) {
 //转码
 router.post('/transcoding',function (req,res) {
     var id = req.body.id;
+
     db_mysql.getOne('video',[],{id:id},function (rows) {
-        // ffmpeg.getVideoInfo(rows.name,function (err,info) {
-        //     console.log(info);
-        // })
         var dstPath = './public/upload/ts/';
         ffmpeg.command(rows.name)
             .audioCodec('aac')
@@ -89,22 +90,32 @@ router.post('/transcoding',function (req,res) {
                 '-use_localtime_mkdir 1',
                 '-level 3.0',
                 '-pix_fmt yuv420p',
-                '-hls_segment_filename ' + dstPath +'out%03d.ts',
+                '-hls_segment_filename ' + dstPath + rows.media_id +'-out%03d.ts',
                 '-hls_list_size 0',
                 '-start_number 1'
             ])
            .output(dstPath + rows.media_id +'.m3u8')
             .on('start',function(cmd) {
-                console.log('Command Line: '+ cmd);
+                var json = JSON.stringify({
+                    anObject: {
+                        result:'start'
+                    },
+                });
+                res.end( json );
+                //console.log('Command Line: '+ cmd);
             })
             .on('error',function (err) {
-                console.log('FFMPEG ERROR ' + err);
+                //console.log('FFMPEG ERROR ' + err);
             })
-            .on('progress',function (progress) {
-                console.log(progress);
+            .on('end', function(stdout, stderr) {
+               //console.log('Transcoding succeeded !');
+            })
+            .on('progress', function(progress) {
+
+                console.log('Processing: ' + progress.percent + '% done');
             })
             .on('stderr', function(stderrLine) {
-                console.log('Stderr output:' + stderrLine);
+                //console.log('Stderr output:' + stderrLine);
             })
             .run();
     })

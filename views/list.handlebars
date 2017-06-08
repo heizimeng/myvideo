@@ -107,6 +107,7 @@
 </div>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/plupload-2.3.1/js/plupload.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
 <script>
     $(function () {
         var pluploader = new plupload.Uploader({
@@ -134,7 +135,6 @@
             document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
         });
         pluploader.bind('FileUploaded',function (uploader,file,responseObject) {
-            console.log(responseObject)
             if (responseObject.status == 200){
                 $('#status').html('上传完成');
             }else{
@@ -153,7 +153,13 @@
             data:{id:id},
             dataType: 'json',
             success:function (res) {
-
+               if (res.anObject.result){
+                   var socket = io.connect('http://127.0.0.1:8000');
+//                   socket.on('progress', function (data) {
+//                       console.log(data.progress);
+//                       socket.emit('my other event', { my: 'data' });
+//                   });
+               }
             }
         })
     });
@@ -165,8 +171,12 @@
             data:{id:id},
             dataType: 'json',
             success:function (res) {
-
+                console.log(res)
             }
         })
     });
+</script>
+
+<script type="text/javascript">
+
 </script>
