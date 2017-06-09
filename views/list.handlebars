@@ -132,7 +132,7 @@
            $('#UploadProgress').width(file.percent+"%")
         });
         pluploader.bind('Error', function(up, err) {
-            document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+            $('#console').html("\nError #" + err.code + ": " + err.message);
         });
         pluploader.bind('FileUploaded',function (uploader,file,responseObject) {
             if (responseObject.status == 200){
@@ -153,13 +153,7 @@
             data:{id:id},
             dataType: 'json',
             success:function (res) {
-               if (res.anObject.result){
-                   var socket = io.connect('http://127.0.0.1:8000');
-//                   socket.on('progress', function (data) {
-//                       console.log(data.progress);
-//                       socket.emit('my other event', { my: 'data' });
-//                   });
-               }
+               $('#status').html('失败');
             }
         })
     });
@@ -171,7 +165,10 @@
             data:{id:id},
             dataType: 'json',
             success:function (res) {
-                console.log(res)
+                if(res.res.result.affectedRows = 1){
+                    alert('删除成功！')
+                    location.reload()
+                }
             }
         })
     });

@@ -1,0 +1,79 @@
+<div class="admin-content">
+    <div class="admin-content-body">
+        <div class="am-cf am-padding">
+            <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">媒体库设置</strong>
+                <!--<small> 媒体库</small>-->
+            </div>
+        </div>
+
+        <div class="am-panel am-panel-default">
+            <div class="am-panel-bd">
+                <div class="am-fl">
+
+                </div>
+                <div class="am-fr">
+
+                </div>
+            </div>
+            <div class="am-tabs" data-am-tabs="{noSwipe: 1}" id="doc-tab-demo-1">
+              <ul class="am-tabs-nav am-nav am-nav-tabs">
+               <li class="am-active"><a href="">工作流</a></li>
+                <li><a href="">执行实例</a></li>
+                <li><a href="">媒体Bucket</a></li>
+                <li><a href="">播放鉴权</a></li>
+                <li><a href="">缓存管理</a></li>
+              </ul>
+              <div class="am-tabs-bd">
+                <div class="am-tab-panel am-active">
+                    <div class="am-panel am-panel-default">
+                        <div class="am-panel-bd">
+                            <a  class="am-btn am-btn-primary am-round" href="/vod/workflow/add" target="_self"> 新建工作流</a>
+                            <table class="am-table am-table-bordered am-table-radius am-table-striped am-margin-top">
+                                <thead>
+                                    <th>工作流信息</th>
+                                    <th>输入路径</th>
+                                    <th>创建时间</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="am-tab-panel">
+                  ...
+                </div>
+                <div class="am-tab-panel">
+                  ...
+                </div>
+                <div class="am-tab-panel">
+                  ...
+                </div>
+                <div class="am-tab-panel">
+                  ...
+                </div>
+              </div>
+            </div>
+            <div class="am-panel-footer">
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="admin-content-footer">
+        <hr>
+        <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+</div>
+
+
+
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/plupload-2.3.1/js/plupload.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
+
+<script>
+  $(function() {
+    $('#doc-my-tabs').tabs();
+  })
+</script>

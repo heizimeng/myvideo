@@ -6,7 +6,7 @@ var mysql = require('mysql');
 var ffmpeg = require('../libraries/my_ffmpeg');
 var config = require('../config');
 var db_mysql = require('../models/db_mysql');
-var io = require('socket.io')(8000)
+//var io = require('socket.io')(8000)
 
 
 var conn = mysql.createConnection({
@@ -27,6 +27,20 @@ router.get('/list', function(req, res, next) {
             });
        });
 });
+router.get('/mediaSettings/flows', function(req, res, next) {
+
+    res.render('mediaSettings');
+
+});
+
+
+
+
+router.get('/workflow/add',function (req,res,next) {
+    res.render('workflow_add')
+});
+
+
 
 router.post('/upload_video',function (req,res,next) {
     var form = new formidable.IncomingForm();
@@ -108,7 +122,7 @@ router.post('/transcoding',function (req,res) {
                 //console.log('FFMPEG ERROR ' + err);
             })
             .on('end', function(stdout, stderr) {
-               //console.log('Transcoding succeeded !');
+               console.log('Transcoding succeeded !');
             })
             .on('progress', function(progress) {
 
@@ -129,13 +143,15 @@ router.post('/delete',function (req,res,next) {
         id:id
     },function (result) {
         var json = JSON.stringify({
-            anObject: {
-                result:'ok'
+            res: {
+                result:result
             },
         });
-        res.end("success_jsonpCallback(" + json + ")");
+        res.end( json );
     })
 });
+
+
 
 
 

@@ -5,7 +5,6 @@ var config=require('../config');
 
 var DB={};
 
-
 /*
 * @param table  表名 String
 * @param fileds 字段 Array
@@ -16,7 +15,7 @@ DB.getOne = function (table,fileds,wheres,callback) {
 	var filed = '' ,where = '';
 	if (fileds &&  fileds.length > 0 ){
 		for (var i = 0 ; i< fileds.length ; i++){
-			filed += fileds[i]+ ',';
+			filed += fileds[i] + ',';
 		}
 		filed = filed.substring(0,filed.length-1);
 	}else{
@@ -85,13 +84,13 @@ DB.insert = function () {
 	var sql = '';
 	DB.execs(sql,function (err,rows) {
 		callback(rows)
-    })
-}
+    });
+};
 
 DB.execs = function (sql,callback) {
     DB.connects().query(sql,function (err, rows, fields) {
 		callback(err,rows);
-    })
+    });
 };
 
 DB.fetch = function (where,callback) {
@@ -100,7 +99,7 @@ DB.fetch = function (where,callback) {
         swhere +=  i + ' = "' + where[i] + '" AND ';
 	}
     swhere += ' 1 ';
-	callback(swhere)
+	callback(swhere);
 }
 
 

@@ -1,0 +1,167 @@
+<style>
+    #activityStart{
+        background: #363f48;
+        margin: 15px auto;
+        width: 125px;
+        height: 35px;
+        text-align: left;
+        position: relative;
+        z-index: 2;
+    }
+     .topology-container {width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+}
+    #activityStart span{
+        font-size: 12px;
+        padding-left: 22px;
+        color: #eee;
+        line-height: 35px;
+    }
+    #activityStart span:before {
+        display: inline-block;
+        background: #ccc;
+        content: "";
+        width: 6px;
+        height: 12px;
+        position: absolute;
+        left: 10px;
+        top: 11px;
+    }
+    #activityStart  div.actions i {
+        float: left;
+        width: 30px;
+        height: 35px;
+        line-height: 35px;
+        text-align: center;
+        color: #b0b2b5;
+        transition: all ease-out .3s;
+        cursor: pointer;
+    }
+    #activityStart  div.actions i:active,#activityStart  div.actions i:hover{
+        background:#09c;border-radius:3px;color:#fff;transform:scale(1.13);
+    }
+    #activityStart div.actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    table td {
+        vertical-align: top;
+    }
+canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+}
+    .topology-container{
+        width: 920px;
+        margin: 0 auto;
+    }
+    td{
+        width: 460px;
+    }
+</style>
+<div class="admin-content">
+    <div class="admin-content-body">
+        <div class="am-cf am-padding">
+            <div class="am-fl am-cf"><a href="javascript:void(0)" class="am-btn am-btn-success" onclick="window.history.go(-1)">返回</a></div>
+        </div>
+
+        <div class="am-panel am-panel-default">
+            <div class="am-panel-bd">
+                <div class="am-fl">
+
+                </div>
+                <div class="am-fr">
+
+                </div>
+                <section class="am-panel am-panel-default">
+                  <main class="am-panel-bd">
+                    <form class="am-form">
+                      <fieldset>
+                        <!--<legend>表单标题</legend>-->
+                        <div class="am-form-group">
+                          <label for="doc-ipt-email-1">工作流名称</label>
+                          <input type="email" class="" id="doc-ipt-email-1" placeholder="">
+                        </div>
+                        <div class="am-form-group">
+                          <label for="doc-select-1">配置方案</label>
+                          <select id="doc-select-1">
+                            <option value="option1">自定义</option>
+                          </select>
+                          <span class="am-form-caret"></span>
+                        </div>
+                          <div class="am-form-group">
+                          <label for="doc-select-1">拓扑结构</label>
+                            <div class="am-panel am-panel-default">
+                                <div class="am-panel-bd">
+
+                                    <div class="topology-container">
+                                        <canvas id="topologyLine" width="920" height="67"></canvas>
+                                        <table class="am-center" width="100%" >
+                                            <tbody>
+                                                <tr>
+                                                    <td >
+                                                        <div id="activityStart" >
+                                                            <span class="binding">输入</span>
+                                                            <div class="am-fr actions">
+                                                                <i class="am-icon-pencil"></i>
+                                                                <i class="am-icon-plus"></i>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td  >
+                                                        <div id="activityStart">
+                                                            <span class="binding">发布</span>
+                                                            <div class="am-fr actions">
+                                                                <i class="am-icon-pencil"></i>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                          <span class="am-form-caret"></span>
+                        </div>
+                        <p><button type="submit" class="am-btn am-btn-default">提交</button></p>
+                      </fieldset>
+                    </form>
+                  </main>
+                </section>
+            </div>
+            <div class="am-panel-footer">
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="admin-content-footer">
+        <hr>
+        <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+</div>
+
+
+
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/plupload-2.3.1/js/plupload.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
+
+<script>
+  $(function() {
+    $('#doc-my-tabs').tabs();
+  })
+</script>
+<script type="text/javascript">
+    var canvas=document.getElementById('topologyLine');
+    var ctx=canvas.getContext('2d');
+    ctx.fillStyle='#cccccc';
+    ctx.fillRect(250,30,400,1);
+
+</script>
