@@ -67,7 +67,7 @@
 
 
 <div class="am-modal am-modal-no-btn " tabindex="-1" id="doc-modal-1">
-    <div class="am-modal-dialog  am-padding-bottom ">
+    <div class="am-modal-dialog  am-padding-bottom " >
         <div class="am-modal-hd">
             <h3 class="am-fl">上传任务</h3>
             <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
@@ -96,9 +96,10 @@
 
                     </tbody>
                 </table>
+                
                 <div class="am-panel-footer ">
                     <div class="am-fr am-margin-top-xl">
-                        <button id="upload-video" type="button" class="am-btn am-btn-default">上传视频</button>
+                        <div id="filePicker" >上传视频</div>
                     </div>
                 </div>
             </div>
@@ -106,58 +107,65 @@
     </div>
 </div>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="/plupload-2.3.1/js/plupload.full.min.js"></script>
+<!--引入CSS-->
+<link rel="stylesheet" type="text/css" href="/webuploader/webuploader.css">
+
+<!--引入JS-->
+<script type="text/javascript" src="/webuploader/webuploader.js"></script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
-<script>
-    $(function () {
-        var pluploader = new plupload.Uploader({
-            browse_button: 'upload-video',
-            url: '/vod/upload_video',
-            file_data_name:'videofile',
-            multipart:true,
-            unique_names:true,
-            runtimes:'html5'
-        });
-        pluploader.init();
-        pluploader.bind('FilesAdded', function(up, files) {
-            var html = '';
-            plupload.each(files, function(file) {
-                html += '<tr id="'+ file.id +'"><td>' + file.name + '</td><td id="status">正在上传</td><td ><div class="am-progress am-progress-xs"> <div id="UploadProgress" class="am-progress-bar" ></div></div></td><td>取消上传</td></tr>';
-            });
-            document.getElementById('video-list').innerHTML += html;
-            pluploader.start();
-        });
-        pluploader.bind('UploadProgress', function(up, file) {
-            console.log(file.percent)
-           $('#UploadProgress').width(file.percent+"%")
-        });
-        pluploader.bind('Error', function(up, err) {
-            $('#console').html("\nError #" + err.code + ": " + err.message);
-        });
-        pluploader.bind('FileUploaded',function (uploader,file,responseObject) {
-            if (responseObject.status == 200){
-                $('#status').html('上传完成');
-            }else{
-                $('#status').html('失败');
+
+
+<script type="text/javascript">
+
+
+// var uploader = WebUploader.create({
+//     auto: true,
+//     server: '/vod/upload_video',
+//     pick: '#filePicker',
+//     swf:  '/js/Uploader.swf',
+//     resize: false
+// });
+var uploader;
+$(function() {
+    $('#doc-modal-1').on('open.modal.amui', function(){
+        uploader = WebUploader.create({
+            auto: true,
+            server: '/vod/upload_video',
+            pick: '#filePicker',
+            swf:  '/webuploader/Uploader.swf',
+            resize: false,
+            duplicate:true,
+            prepareNextFile:true,
+            accept:{
+                title: 'Video',
+                extensions: 'mp4',
+                mimeTypes: 'video/*'
             }
         });
+        uploader.on( 'fileQueued', function( file ) {
+            var str = '';
+            str += '<tr id="'+ file.id +'"><td>' + file.name + '</td><td id="status">正在上传</td><td ><div class="am-progress am-progress-xs"> <div id="UploadProgress" class="am-progress-bar" ></div></div></td><td></td></tr>';
+            $('#video-list').append(str);
+        });
+        uploader.on('uploadSuccess', function (file,response) {
+            //console.log(response);
+            $('#status').html('上传成功');            
+        });
+        uploader.on('uploadProgress',function (file,percentage) {
+            $('#UploadProgress').width((percentage*100)+"%")
+        });
+        uploader.on('uploadError',function (file,reason) {
+            //console.log('err:'+reason);
+        });
     });
-
-    //"/vod/transcoding"
-
-    $(document).on('click','#transcoding',function (e) {
-        var id = $(this).attr('data-id')
-        $.ajax({
-            url:'/vod/transcoding',
-            type:'post',
-            data:{id:id},
-            dataType: 'json',
-            success:function (res) {
-               $('#status').html('失败');
-            }
-        })
+    $('#doc-modal-1').on('close.modal.amui', function(){
+        uploader.destroy();
     });
-    $(document).on('click','#delete',function (e) {
+});
+
+$(document).on('click','#delete',function (e) {
         var id = $(this).attr('data-id')
         $.ajax({
             url:'/vod/delete',
@@ -174,6 +182,4 @@
     });
 </script>
 
-<script type="text/javascript">
 
-</script>

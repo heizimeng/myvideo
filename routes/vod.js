@@ -74,16 +74,16 @@ router.post('/upload_video',function (req,res,next) {
         }
     });
     form.on('end', function() {
-        conn.query('insert into video (name,media_id,createtime)values(?,?,?)',[fName,medis_id,timestamp], function(err, result) {
-            if (err) throw err;
+        //conn.query('insert into video (name,media_id,createtime)values(?,?,?)',[fName,medis_id,timestamp], function(err, result) {
+            //if (err) throw err;
             var json = JSON.stringify({
                 anObject: {
                     result:'ok'
                 },
             });
-            res.end("success_jsonpCallback(" + json + ")");
-        });
-        conn.end();
+            res.end(json);
+        //});
+        //conn.end();
     });
 });
 //转码
@@ -110,13 +110,7 @@ router.post('/transcoding',function (req,res) {
             ])
            .output(dstPath + rows.media_id +'.m3u8')
             .on('start',function(cmd) {
-                var json = JSON.stringify({
-                    anObject: {
-                        result:'start'
-                    },
-                });
-                res.end( json );
-                //console.log('Command Line: '+ cmd);
+                console.log('Command Line: '+ cmd);
             })
             .on('error',function (err) {
                 //console.log('FFMPEG ERROR ' + err);
@@ -126,7 +120,7 @@ router.post('/transcoding',function (req,res) {
             })
             .on('progress', function(progress) {
 
-                console.log('Processing: ' + progress.percent + '% done');
+                console.log('Processing: ' + progress.percent + '%');
             })
             .on('stderr', function(stderrLine) {
                 //console.log('Stderr output:' + stderrLine);
@@ -150,10 +144,6 @@ router.post('/delete',function (req,res,next) {
         res.end( json );
     })
 });
-
-
-
-
 
 
 module.exports = router;

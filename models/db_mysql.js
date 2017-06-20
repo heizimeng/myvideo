@@ -113,7 +113,7 @@ DB.connects = function () {
 		password: config.mysql.password,
 		database: config.mysql.db_name
 	};
-	var instance = mysql.createConnection(option)
+	var instance = mysql.createConnection(option);
 	instance.connect();
 	return instance;
 };
